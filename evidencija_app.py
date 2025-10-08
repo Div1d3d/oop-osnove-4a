@@ -11,56 +11,101 @@ class Ucenik:
 
 class EvidencijaApp:
     def __init__(self, root):
-# --- Struktura prozora ---
+        self.ucenici = []
+        self.odabrani_ucenik_index = None
+
         root.title("Evidencija učenika")
         root.geometry("500x400")
 
-# --- Konfiguracija responzivnosti ---
-# Glavni prozor: daj "težinu" stupcu 0 i redu 1 (gdje je lista)
         root.columnconfigure(0, weight=1)
         root.rowconfigure(1, weight=1)
 
-# --- Okviri (Frames) za organizaciju ---
-# Okvir za formu (unos)
         unos_frame = tk.Frame(root, padx=10, pady=10)
-        unos_frame.grid(row=0, column=0, sticky="EW") # Rasteže se horizontalno
+        unos_frame.grid(row=0, column=0, sticky="EW")
 
-# Okvir za prikaz (lista)
         prikaz_frame = tk.Frame(root, padx=10, pady=10)
-        prikaz_frame.grid(row=1, column=0, sticky="NSEW") # Rasteže se u svim smjerovima
+        prikaz_frame.grid(row=1, column=0, sticky="NSEW")
 
-# Responzivnost unutar okvira za prikaz
         prikaz_frame.columnconfigure(0, weight=1)
         prikaz_frame.rowconfigure(0, weight=1)
 
-# --- Widgeti za unos ---
-# Ime
         tk.Label(unos_frame, text="Ime:").grid(row=0, column=0, padx=5, pady=5, sticky="W")
-        ime_entry = tk.Entry(unos_frame)
-        ime_entry.grid(row=0, column=1, padx=30, pady=5, sticky="EW")
+        self.ime_entry = tk.Entry(unos_frame)
+        self.ime_entry.grid(row=0, column=1, padx=30, pady=5, sticky="EW")
 
-# Prezime
         tk.Label(unos_frame, text="Prezime:").grid(row=1, column=0, padx=5, pady=5, sticky="W")
-        prezime_entry = tk.Entry(unos_frame)
-        prezime_entry.grid(row=1, column=1, padx=30, pady=5, sticky="EW")
+        self.prezime_entry = tk.Entry(unos_frame)
+        self.prezime_entry.grid(row=1, column=1, padx=30, pady=5, sticky="EW")
 
-# Razred
         tk.Label(unos_frame, text="Razred:").grid(row=2, column=0, padx=5, pady=5, sticky="W")
-        razred_entry = tk.Entry(unos_frame)
-        razred_entry.grid(row=2, column=1, padx=30, pady=5, sticky="EW")
+        self.razred_entry = tk.Entry(unos_frame)
+        self.razred_entry.grid(row=2, column=1, padx=30, pady=5, sticky="EW")
 
-# Gumbi
-        dodaj_gumb = tk.Button(unos_frame, text="Dodaj učenika")
+        dodaj_gumb = tk.Button(unos_frame, text="Dodaj učenika", command=self.dodaj_ucenika)
         dodaj_gumb.grid(row=3, column=0, padx=5, pady=10, sticky="W")
 
-        spremi_gumb = tk.Button(unos_frame, text="Spremi izmjene", width=35)
+        spremi_gumb = tk.Button(unos_frame, text="Spremi izmjene", width=35, command=self.spremi_izmjene)
         spremi_gumb.grid(row=3, column=1, padx=30, pady=10, sticky="E")
 
-# --- Widgeti za prikaz (NOVO GRADIVO: Listbox) ---
-        listbox = tk.Listbox(prikaz_frame)
-        listbox.grid(row=0, column=0, sticky="NSEW")
+        self.listbox = tk.Listbox(prikaz_frame)
+        self.listbox.grid(row=0, column=0, sticky="NSEW")
+        self.listbox.bind("<<ListboxSelect>>", self.odaberi_ucenika)
 
-# Scrollbar za listbox
-        scrollbar = tk.Scrollbar(prikaz_frame, orient="vertical", command=listbox.yview)
+        scrollbar = tk.Scrollbar(prikaz_frame, orient="vertical", command=self.listbox.yview)
         scrollbar.grid(row=0, column=1, sticky="NS")
-        listbox.config(yscrollcommand=scrollbar.set)
+        self.listbox.config(yscrollcommand=scrollbar.set)
+
+    def dodaj_ucenika(self):
+        ime = self.ime_entry.get()
+        prezime = self.prezime_entry.get()
+        razred = self.razred_entry.get()
+
+        if ime and prezime and razred:
+            ucenik = Ucenik(ime, prezime, razred)
+            self.ucenici.append(ucenik)
+            self.osvjezi_prikaz()
+
+            self.ime_entry.delete(0, tk.END)
+            self.prezime_entry.delete(0, tk.END)
+            self.razred_entry.delete(0, tk.END)
+
+    def osvjezi_prikaz(self):
+        self.listbox.delete(0, tk.END)
+
+        for ucenik in self.ucenici:
+            self.listbox.insert(tk.END, str(ucenik))
+
+    def odaberi_ucenika(self, event):
+        selected_index = self.listbox.curselection()
+
+        if selected_index:
+            self.odabrani_ucenik_index = selected_index[0]
+            ucenik = self.ucenici[self.odabrani_ucenik_index]
+
+            self.ime_entry.delete(0, tk.END)
+            self.ime_entry.insert(0, ucenik.ime)
+            self.prezime_entry.delete(0, tk.END)
+            self.prezime_entry.insert(0, ucenik.prezime)
+            self.razred_entry.delete(0, tk.END)
+            self.razred_entry.insert(0, ucenik.razred)
+
+    def spremi_izmjene(self):
+        if self.odabrani_ucenik_index is not None:
+            ucenik = self.ucenici[self.odabrani_ucenik_index]
+
+            ucenik.ime = self.ime_entry.get()
+            ucenik.prezime = self.prezime_entry.get()
+            ucenik.razred = self.razred_entry.get()
+
+            self.osvjezi_prikaz()
+
+            self.ime_entry.delete(0, tk.END)
+            self.prezime_entry.delete(0, tk.END)
+            self.razred_entry.delete(0, tk.END)
+
+            self.odabrani_ucenik_index = None
+
+if __name__ == "__main__":
+    root = tk.Tk()
+    app = EvidencijaApp(root)
+    root.mainloop()
