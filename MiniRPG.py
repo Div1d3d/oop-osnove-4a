@@ -19,16 +19,13 @@ class Warrior(Lik):
     def __init__(self, ime, rasa):
         super().__init__(ime, rasa, "Warrior", 8, 5, 5, 200)
 
-
 class Mage(Lik):
     def __init__(self, ime, rasa):
         super().__init__(ime, rasa, "Mage", 7, 10, 6, 100)
 
-
 class Assasin(Lik):
     def __init__(self, ime, rasa):
         super().__init__(ime, rasa, "Assasin", 9, 6, 10, 75)
-
 
 class Admin(Lik):
     def __init__(self, ime, rasa):
@@ -65,7 +62,7 @@ class RPGKreatorLikova(ttk.Frame):
 
     def __init__(self, master):
         ttk.Frame.__init__(self, master, padding=10)
-        master.title("Mini RPG – Kreiranje likova")
+        master.title("Mini RPG - Kreiranje likova")
         self.pack(fill="both", expand=True)
 
         self._likovi = []
@@ -197,12 +194,13 @@ class RPGKreatorLikova(ttk.Frame):
             self._osvjezi_listu()
             self._prikazi_detalje(None)
 
-    #Spremanje (Uzeo sam CSV jer mi je bolji od XML-a za prikazivanje tabličnih podataka)
+
+
+    #Spremanje
     def spremi_csv(self):
         if not self._likovi:
             messagebox.showinfo("Spremanje", "Lista je prazna, ništa za spremiti.")
-            return
-        try:
+        else:
             with open(self.csv_path, "w", newline="", encoding="utf-8") as f:
                 writer = csv.DictWriter(f, fieldnames=self.CSV_HEADER)
                 writer.writeheader()
@@ -217,15 +215,12 @@ class RPGKreatorLikova(ttk.Frame):
                         "hp": lik.hp,
                     })
             messagebox.showinfo("Spremljeno", f"Spremljeno u:\n{self.csv_path}")
-        except Exception as e:
-            messagebox.showerror("Greška pri spremanju", str(e))
 
     #Učitavanje
     def ucitaj_csv(self):
         if not os.path.exists(self.csv_path):
-            messagebox.showinfo("Učitavanje", "Datoteka likovi.csv ne postoji.")
-            return
-        try:
+            messagebox.showinfo("Učitavanje", "Nemaš ništa za učitati.")
+        else:
             likovi = []
             with open(self.csv_path, "r", newline="", encoding="utf-8") as f:
                 reader = csv.DictReader(f)
@@ -235,13 +230,16 @@ class RPGKreatorLikova(ttk.Frame):
             self._osvjezi_listu()
             self._prikazi_detalje(None)
             messagebox.showinfo("Učitano", f"Učitano iz {self.csv_path}.")
-        except Exception as e:
-            messagebox.showerror("Greška pri učitavanju", str(e))
 
+#Uzeo sam CSV jer mi je bolji od XML-a za prikazivanje tabličnih podataka
+
+
+#Setup
 def main():
     root = tk.Tk()
     app = RPGKreatorLikova(root)
     root.mainloop()
 
+#Pokretanje aplikacije
 if __name__ == "__main__":
     main()
