@@ -10,7 +10,7 @@ Aplikacija je zamišljena kao jednostavan “character creator” gdje korisnik:
 - dodaje i uklanja iteme iz inventorya
 - sprema i učitava pojedinačne likove i kompletno stanje aplikacije
 
-![UI Glavnog prozora sa nekoliko primjera kreairanih likova]<img width="2559" height="1390" alt="image" src="https://github.com/user-attachments/assets/84050133-c0b9-42a9-a6f3-1da6e5084ae8" />
+UI Glavnog prozora sa nekoliko primjera kreairanih likova<img width="2559" height="1390" alt="image" src="https://github.com/user-attachments/assets/84050133-c0b9-42a9-a6f3-1da6e5084ae8" />
 
 ## Ključne funkcionalnosti
 - Kreiranje lika (Warrior, Mage, Assassin) s fiksnim atributima
