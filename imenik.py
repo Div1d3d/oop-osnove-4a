@@ -1,7 +1,7 @@
 import sqlite3
 
 
-# Funkcija za inicijalizaciju baze i tablice
+#Inicijalizacija
 def inicijalizacija():
     conn = sqlite3.connect("Imenik.db")
     cursor = conn.cursor()
@@ -18,7 +18,7 @@ def inicijalizacija():
     conn.close()
 
 
-# Unos novog kontakta
+#Novi kontakt
 def unesi_kontakt():
     ime_prezime = input("Unesite ime i prezime: ")
     broj_mobitela = input("Unesite broj mobitela: ")
@@ -37,7 +37,7 @@ def unesi_kontakt():
     print("Kontakt uspješno dodan!")
 
 
-# Ispis svih kontakata
+#Ispis spremljenih
 def ispisi_kontakte():
     conn = sqlite3.connect("Imenik.db")
     cursor = conn.cursor()
@@ -57,7 +57,7 @@ def ispisi_kontakte():
         print(f"{kontakt[0]} | {kontakt[1]} | {kontakt[2]}")
 
 
-# Brisanje kontakta po ID-u
+#Brisanje
 def obrisi_kontakt():
     id_kontakta = input("Unesite ID kontakta za brisanje: ")
 
@@ -75,7 +75,7 @@ def obrisi_kontakt():
     print("Kontakt obrisan (ako je postojao).")
 
 
-# Glavni program
+#Logika
 def main():
     inicijalizacija()
 
@@ -102,4 +102,5 @@ def main():
 
 
 if __name__ == "__main__":
+
     main()
